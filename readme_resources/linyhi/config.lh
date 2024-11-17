@@ -1,0 +1,8 @@
+imagesdirectory: imgs
+textfile: text.txt
+clearconsole: true
+paddingx: 1
+paddingy: 1
+gap: 5
+border: 
+bordercolor: bright yellow
