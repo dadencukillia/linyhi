@@ -12,3 +12,4 @@ add_subdirectory(./src/thirdparty/base64)
 target_link_libraries(${PROJECT_NAME} PRIVATE
 	base64
 )
+target_include_directories(${PROJECT_NAME} PRIVATE ./src)

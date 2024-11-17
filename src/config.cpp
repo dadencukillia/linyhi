@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <string>
 #include <iostream>
 #include <vector>
@@ -6,6 +7,7 @@
 #include "utils/terminfo.cpp"
 #include "utils/strings.cpp"
 #include "terms/kitty.cpp"
+#include "string_formatter.cpp"
 
 struct config {
 	std::string images_directory = "";
@@ -68,7 +70,7 @@ int show_from_config(config conf) {
 		std::cout << dye::fg_reset() << split[i] << '\n';
 	}
 
-	for (unsigned int i = 0; i < conf.padding_y; i++) {
+	for (unsigned int i = 0; i < conf.padding_y + std::max<int>(0, img_rows - split.size()); i++) {
 		std::cout << '\n';
 	}
 
