@@ -4,7 +4,7 @@ A beautiful and fast replacement for [neofetch](https://github.com/dylanaraps/ne
 ![screenshot 1](https://raw.github.com/dadencukillia/linyhi/main/readme_resources/screenshot1.png)
 *Arts by [@iwa_to_mushi](https://twitter.com/iwa_to_mushi)*
 
-![screenshot 2](https://raw.github.com/dadencukillia/linyhi/main/readme_resources/screenshot1.png)
+![screenshot 2](https://raw.github.com/dadencukillia/linyhi/main/readme_resources/screenshot2.png)
 
 ## 📥️ Installation
 **! The project is available only on Linux-based operating systems and in the Kitty terminal.**
