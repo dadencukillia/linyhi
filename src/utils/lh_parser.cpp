@@ -37,7 +37,7 @@ struct parsing_result {
 };
 
 parsing_result parse(parse_settings settings) {
-	fileInfo file = read_file(settings.path);
+	file_info file = read_file(settings.path);
 	if (!file.opened) {
 		log_error("couldn't open config file " + settings.path);
 		return {};

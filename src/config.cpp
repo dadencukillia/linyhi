@@ -4,10 +4,10 @@
 #include <vector>
 #include "utils/colorize.cpp"
 #include "utils/files.cpp"
-#include "utils/terminfo.cpp"
 #include "utils/strings.cpp"
 #include "terms/kitty.cpp"
 #include "string_formatter.cpp"
+#include "sysinfo/sysinfo.hpp"
 
 struct config {
 	std::string images_directory = "";
@@ -27,7 +27,7 @@ int show_from_config(config conf) {
 		return 1;
 	}
 
-	fileInfo file = read_file(file_path);
+	file_info file = read_file(file_path);
 	if (file.content.size() == 0 || file.img_width == 0 || file.img_height == 0) {
 		log_error("couldn't load the image " + file_path);
 		return 1;

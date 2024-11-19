@@ -5,9 +5,11 @@
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
+#include <stdexcept>
 #include <vector>
+#include "colorize.cpp"
 
-struct fileInfo {
+struct file_info {
 	bool opened;
 	std::vector<char> content;
 	unsigned int img_width = 0;
@@ -15,7 +17,7 @@ struct fileInfo {
 };
 
 std::string replace_tilde_path(std::string path) {
-	std::string home = std::getenv("HOME");
+	std::string home = std::getenv("HOME")?:"";
 	std::string to_return = "";
 	to_return.reserve(path.length());
 	for (char i : path) {
@@ -29,17 +31,17 @@ std::string replace_tilde_path(std::string path) {
 	return to_return;
 }
 
-fileInfo read_file(std::string path) {
+file_info read_file(std::string path) {
 	std::string handled_path = replace_tilde_path(path);
 
 	// Opening the file
 	std::ifstream file(handled_path);
 	if (!file.is_open())
-		return fileInfo{false};
+		return file_info{false};
 
 	// Determining size of the file
 	file.seekg(0, std::ios::end);
-    size_t fileSize = file.tellg();
+    size_t file_size = file.tellg();
     file.seekg(0, std::ios::beg);
 
 	// Determining dimension of the image file
@@ -56,14 +58,17 @@ fileInfo read_file(std::string path) {
 
 	// Writing data in the new vector
 	std::vector<char> vec;
-	vec.reserve(fileSize);
+	try {
+		vec.reserve(std::max<size_t>(10, file_size));
+	} catch(std::length_error _) {
+	}
 
 	char byte;
 	while (file.get(byte)) {
 		vec.push_back(byte);
 	}
 
-	return fileInfo {
+	return file_info {
 		true,
 		vec,
 		width,

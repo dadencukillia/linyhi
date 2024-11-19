@@ -78,7 +78,7 @@ int main() {
 	config conf;
 	if (result.strings.find("textfile") != result.strings.end()) {
 		std::string path = (config_directory / replace_tilde_path(result.strings["textfile"])).string();
-		fileInfo file = read_file(path);
+		file_info file = read_file(path);
 		if (!file.opened) {
 			log_error("couldn't open file " + path);
 			return 1;

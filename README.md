@@ -1,8 +1,10 @@
 # Linyhi
 A beautiful and fast replacement for [neofetch](https://github.com/dylanaraps/neofetch) running in the [Kitty](https://github.com/kovidgoyal/kitty) terminal.
 
-![screenshot](https://raw.github.com/dadencukillia/linyhi/main/readme_resources/screenshot.png)
+![screenshot 1](https://raw.github.com/dadencukillia/linyhi/main/readme_resources/screenshot1.png)
 *Arts by [@iwa_to_mushi](https://twitter.com/iwa_to_mushi)*
+
+![screenshot 2](https://raw.github.com/dadencukillia/linyhi/main/readme_resources/screenshot1.png)
 
 ## 📥️ Installation
 **! The project is available only on Linux-based operating systems and in the Kitty terminal.**
@@ -56,7 +58,7 @@ Well, here's what you can customize in linyhi:
 | magenta | bright magenta |
 | cyan | bright cyan |
 | white | bright white |
-| no |
+| no | no |
 </details>
 
 <details>
@@ -65,7 +67,7 @@ Well, here's what you can customize in linyhi:
 
 The format of informative text must be in the file specified in the configuration file as the value of the `textfile` field.
 
-The text will be displayed next to the image exactly as it is in the file. However, there is a way to change the color of the text, display system variables and other placeholders (not yet implemented). To do this, you need to surround the system value with `%` characters. For example: `Hello %USER%` or `My terminal is %TERM%`.
+The text will be displayed next to the image exactly as it is in the file. However, there is a way to change the color of the text, display system variables and other placeholders. To do this, you need to surround the system value with `%` characters. For example: `Hello %USER%` or `My terminal is %TERM%`.
 
 To color, surround the name of the color in lowercase letters with `%` symbols. For example: `%red%This text should be red.` or `%red%Red%reset% and %gray%gray%reset% and default.`. Also note that the color is reset every line.
 
@@ -80,21 +82,34 @@ To color, surround the name of the color in lowercase letters with `%` symbols. 
 | magenta | bright_magenta |
 | cyan | bright_cyan |
 | white | bright_white |
-| reset |
+| reset | reset |
+
+**Placeholders for informative text:**
+| OS | CPU | GPU | Battery | RAM | NETWORK | TERMINAL |
+|----|-----|-----|---------|-----|---------|----------|
+| %distro% | %cpu_name% | %gpu_name% | %battery_state% | %free_ram% | %ip% | %term% |
+| %linux_version% | %cpu_logical_cores% | | %battery_charge% | %total_ram% | | %shell% |
+| %uptime% | %cpu_physical_cores% | | | %avialable_ram% | | %shell_version% |
+| | | | | %busy_ram% | | |
+| | | | | %free_ram_gb% | | |
+| | | | | %total_ram_gb% | | |
+| | | | | %avialable_ram_gb% | | |
+| | | | | %busy_ram_gb% | | |
+
 </details>
 
 ## 📝 To-Do
-- Add support for other terminals (Konsole, wayst, WezTerm)
+- Add support for other terminals (Konsole, wayst, WezTerm).
 - Add support for other image formats (jpeg, webp).
 - Add more settings for the configuration.
-- Add placeholders to display information about the system.
+- Add more placeholders to display information about the system.
 
 ## 🤝 Contribution
 Contributions are welcomed. You can test the program and report bugs, update the code. It would be great if you could help format the code and help implement items from the To-Do list.
 
 ### Project structure:
-- **src/terms** — a folder for protocols of different terminals
-- **src/thirdparty** — a folder containing libraries or code from the Internet.
+- **src/terms** — a folder for protocols of different terminals.
+- **src/thirdparty** — a folder containing libraries or code from the Internet that has own CMakeLists.txt file.
 - **src/utils** — a folder with code that can be reused in other projects.
 - **readme_resources** — a folder with resources for the README.md file.
 
