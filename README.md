@@ -111,6 +111,7 @@ Contributions are welcomed. You can test the program and report bugs, update the
 - **src/terms** — a folder for protocols of different terminals.
 - **src/thirdparty** — a folder containing libraries or code from the Internet that has own CMakeLists.txt file.
 - **src/utils** — a folder with code that can be reused in other projects.
+- **src/sysinfo** — a folder containing code with a set of functions for obtaining system information.
 - **readme_resources** — a folder with resources for the README.md file.
 
 ### Building:
