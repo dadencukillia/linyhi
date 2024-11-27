@@ -1,8 +1,15 @@
-#ifndef D_COLORIZE_CPP
-#define D_COLORIZE_CPP
+#ifndef D_COLOR_CPP
+#define D_COLOR_CPP
 
+#include <cctype>
 #include <iostream>
 #include <string>
+
+struct rgb {
+	unsigned short r;
+	unsigned short g;
+	unsigned short b;
+};
 
 namespace dye {
 	constexpr int reset = 0;
@@ -193,6 +200,138 @@ namespace dye {
 	std::string clear_console() {
 		return "\033[2J\033[3J\033[1;1H";
 	}
+
+	unsigned int rgb_color_code(unsigned short r, unsigned short g, unsigned short b) {
+		unsigned short v[] = {0, 95, 135, 175, 215, 255};
+		size_t size = sizeof(v) / sizeof(unsigned short);
+		unsigned short r_diff_index = size-1;
+		unsigned short r_diff_value = v[size-1];
+		unsigned short g_diff_index = size-1;
+		unsigned short g_diff_value = v[size-1];
+		unsigned short b_diff_index = size-1;
+		unsigned short b_diff_value = v[size-1];
+
+		for (int i = 0; i < size; i++) {
+			unsigned short vl = v[i];
+			unsigned short rv = 0;
+			unsigned short gv = 0;
+			unsigned short bv = 0;
+
+			if (vl < r) {
+				rv = r-vl;
+			} else {
+				rv = vl-r;
+			}
+
+			if (vl < g) {
+				gv = g-vl;
+			} else {
+				gv = vl-g;
+			}
+
+			if (vl < b) {
+				bv = b-vl;
+			} else {
+				bv = vl-b;
+			}
+
+			if (rv < r_diff_value) {
+				r_diff_value = rv;
+				r_diff_index = i;
+			}
+			if (gv < g_diff_value) {
+				g_diff_value = gv;
+				g_diff_index = i;
+			}
+			if (bv < b_diff_value) {
+				b_diff_value = bv;
+				b_diff_index = i;
+			}
+		}
+
+		return r_diff_index * size * size + g_diff_index * size + b_diff_index + 16;
+	}
+
+	unsigned int rgb_color_code(rgb color) {
+		return rgb_color_code(color.r, color.g, color.b);
+	}
+
+	std::string bg_from_rgb(unsigned short r, unsigned short g, unsigned short b) {
+		return "\e[48:5:" + std::to_string(rgb_color_code(r, g, b)) + "m";
+	}
+
+	std::string fg_from_rgb(unsigned short r, unsigned short g, unsigned short b) {
+		return "\e[38:5:" + std::to_string(rgb_color_code(r, g, b)) + "m";
+	}
+
+	std::string bg_from_rgb(rgb color) {
+		return bg_from_rgb(color.r, color.g, color.b);
+	}
+
+	std::string fg_from_rgb(rgb color) {
+		return fg_from_rgb(color.r, color.g, color.b);
+	}
+}
+
+rgb hex_to_rgb(std::string hex) {
+	char symbols[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+	unsigned short c[2] = {16, 16};
+	bool shorten;
+	if (hex.length() == 6) {
+		shorten = false;
+	} else if (hex.length() == 3) {
+		shorten = true;
+	} else {
+		return rgb{};
+	}
+
+	rgb color = {16, 16, 16};
+
+	for (char i : hex) {
+		char lower = std::tolower(i);
+		bool contains = false;
+		unsigned short value = 0;
+		for (int ci = 0; ci < sizeof(symbols); ci++) {
+			if (symbols[ci] == lower) {
+				contains = true;
+				value = ci;
+				break;
+			}
+		}
+
+		if (!contains) {
+			return rgb{};
+		}
+
+		if (shorten) {
+			if (color.r == 16) {
+				color.r = value * 16 + value;
+			} else if (color.g == 16) {
+				color.g = value * 16 + value;
+			} else if (color.b == 16) {
+				color.b = value * 16 + value;
+			}
+		} else {
+			if (c[0] == 16) {
+				c[0] = value;
+			} else {
+				c[1] = value;
+
+				if (color.r == 16) {
+					color.r = c[0] * 16 + c[1];
+				} else if (color.g == 16) {
+					color.g = c[0] * 16 + c[1];
+				} else if (color.b == 16) {
+					color.b = c[0] * 16 + c[1];
+				}
+
+				c[0] = 16;
+				c[1] = 16;
+			}
+		}
+	}
+
+	return color;
 }
 
 void log_error(std::string error) {

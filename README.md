@@ -35,17 +35,17 @@ There must be a file `config.lh` in the configuration folder.
 - A string value can be set with or without the “ character.
 
 Well, here's what you can customize in linyhi:
-| Key | Type | Description |
-|-----|------|-------------|
-| textfile | String | The path to the text file whose text will be displayed to the right of the picture. You can learn how to set up this file in the next section. |
-| imagesdirectory | String | A folder with images that will be randomly selected and displayed to the left of the informative text. **Important:** all images should be in PNG format, and they are not automatically scaled, so save them in the size that should be displayed in the terminal window. |
-| paddingx | non-negative number | Left indents from the edges of the terminal window (number of space characters). |
-| paddingy | non-negative number | Top and bottom indents from the edges of the terminal window, past and next command lines (number of line break characters). |
-| gap | non-negative number | Indent the informative text from the picture in the spaces. |
-| clearconsole | boolean (yes/no/true/false) | If yes or true, the program will clear the console after each program launch. |
-| croptextheight | boolean (yes/no/true/false) | If so, the lines of informative text that do not fit within the height of the image will not be displayed. |
-| border | character | The character that will form the column that separates the informative text from the image. If you want no column, leave a space here. |
-| bordercolor | String | The color of the column between the image and the informative text. You can see the list of possible values below. |
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| textfile | string | "" | The path to the text file whose text will be displayed to the right of the picture. You can learn how to set up this file in the next section. |
+| imagesdirectory | string | "" | A folder with images that will be randomly selected and displayed to the left of the informative text. **Important:** all images should be in PNG format, and they are not automatically scaled, so save them in the size that should be displayed in the terminal window. |
+| paddingx | non-negative number | 0 | Left indents from the edges of the terminal window (number of space characters). |
+| paddingy | non-negative number | 0 | Top and bottom indents from the edges of the terminal window, past and next command lines (number of line break characters). |
+| gap | non-negative number | 0 | Indent the informative text from the picture in the spaces. |
+| clearconsole | boolean (yes/no/true/false) | false | If yes or true, the program will clear the console after each program launch. |
+| croptextheight | boolean (yes/no/true/false) | true | If so, the lines of informative text that do not fit within the height of the image will not be displayed. |
+| border | character | ' ' | The character that will form the column that separates the informative text from the image. If you want no column, leave a space here. |
+| bordercolor | string | "no" | The color of the column between the image and the informative text. You can see the list of possible values below. |
 
 **Color values for bordercolor field:**
 | Regular | Bright |
@@ -71,6 +71,8 @@ The text will be displayed next to the image exactly as it is in the file. Howev
 
 To color, surround the name of the color in lowercase letters with `%` symbols. For example: `%red%This text should be red.` or `%red%Red%reset% and %gray%gray%reset% and default.`. Also note that the color is reset every line.
 
+Linyhi supports 8-bit colors, which allows you to display text in 215 different colors in the console. However, you can use HEX codes for 256-bit colors and linyhi will convert this color to the closest similar 8-bit color. So, if you want to color the text in your own color, you will need to put two `%` characters between them, put a `#` character and write the color code in CSS/HTML format. Here are some examples: `%#ff0000%` (colors the text red), `%#f00%` (also colors the text red, but a shorter version of the entry), `%#31511E%` (dark green).
+
 **Color values for informative text:**
 | Regular | Bright |
 |---------|--------|
@@ -90,9 +92,9 @@ To color, surround the name of the color in lowercase letters with `%` symbols. 
 | %distro% | %cpu_name% | %gpu_name% | %battery_state% | %free_ram% | %ip% | %term% |
 | %linux_version% | %cpu_logical_cores% | | %battery_charge% | %total_ram% | | %shell% |
 | %uptime% | %cpu_physical_cores% | | | %avialable_ram% | | %shell_version% |
-| | | | | %busy_ram% | | |
-| | | | | %free_ram_gb% | | |
-| | | | | %total_ram_gb% | | |
+| %uptime_short% | | | | %busy_ram% | | %colors_block_circles% |
+| | | | | %free_ram_gb% | | %colors_block_diamonds% |
+| | | | | %total_ram_gb% | | %colors_block_squares% |
 | | | | | %avialable_ram_gb% | | |
 | | | | | %busy_ram_gb% | | |
 
@@ -108,13 +110,15 @@ To color, surround the name of the color in lowercase letters with `%` symbols. 
 Contributions are welcomed. You can test the program and report bugs, update the code. It would be great if you could help format the code and help implement items from the To-Do list.
 
 ### Project structure:
-- **src/terms** — a folder for protocols of different terminals.
+- **src/terms** — a folder of protocols for different terminals.
 - **src/thirdparty** — a folder containing libraries or code from the Internet that has own CMakeLists.txt file.
-- **src/utils** — a folder with code that can be reused in other projects.
+- **src/utils** — a folder with modules (one file is a set of thematic functions) that can be reused in other projects.
 - **src/sysinfo** — a folder containing code with a set of functions for obtaining system information.
+- **test** — folder with tests.
 - **readme_resources** — a folder with resources for the README.md file.
 
 ### Building:
 - `make` — build and run executable.
 - `make release` — build executable for usage.
 - `make exe` — run builded executable.
+- `make test` — run tests.

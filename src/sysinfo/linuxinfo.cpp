@@ -1,6 +1,10 @@
+#ifndef D_LINUXINFO_CPP
+#define D_LINUXINFO_CPP
+
 #include <cctype>
 #include <string>
 #include <sys/utsname.h>
+#include <sys/sysinfo.h>
 #include "../utils/files.cpp"
 #include "../utils/command.cpp"
 #include "../utils/strings.cpp"
@@ -56,62 +60,21 @@ std::string get_linux_version() {
 }
 
 std::string get_uptime() {
-	file_info file = read_file("/proc/uptime");
-	if (!file.opened) {
+	struct sysinfo info;
+	if (sysinfo(&info) < 0) {
 		return std::string(exec("uptime -p"));
 	}
 
-	unsigned long parsed_secs = 0;
-	for (char i : file.content) {
-		bool breakFor = false;
-		switch (i) {
-			case '0':
-				parsed_secs *= 10;
-				break;
-			case '1':
-				parsed_secs *= 10;
-				parsed_secs += 1;
-				break;
-			case '2':
-				parsed_secs *= 10;
-				parsed_secs += 2;
-				break;
-			case '3':
-				parsed_secs *= 10;
-				parsed_secs += 3;
-				break;
-			case '4':
-				parsed_secs *= 10;
-				parsed_secs += 4;
-				break;
-			case '5':
-				parsed_secs *= 10;
-				parsed_secs += 5;
-				break;
-			case '6':
-				parsed_secs *= 10;
-				parsed_secs += 6;
-				break;
-			case '7':
-				parsed_secs *= 10;
-				parsed_secs += 7;
-				break;
-			case '8':
-				parsed_secs *= 10;
-				parsed_secs += 8;
-				break;
-			case '9':
-				parsed_secs *= 10;
-				parsed_secs += 9;
-				break;
-			case ' ' | '.':
-				breakFor = true;
-				break;
-		}
-		if (breakFor) {
-			break;
-		}
+	return time_seconds_to_human(info.uptime);
+}
+
+std::string get_uptime_short() {
+	struct sysinfo info;
+	if (sysinfo(&info) < 0) {
+		return std::string(exec("uptime -p"));
 	}
 
-	return time_seconds_to_human(parsed_secs);
+	return time_seconds_to_human_short(info.uptime);
 }
+
+#endif

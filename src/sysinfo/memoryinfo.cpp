@@ -1,3 +1,6 @@
+#ifndef D_MEMORYINFO_CPP
+#define D_MEMORYINFO_CPP
+
 #include "hwinfo/ram.h"
 #include "../utils/strings.cpp"
 #include <string>
@@ -53,3 +56,5 @@ std::string get_busy_ram_gb() {
 	long gbytes = mbytes / bytesInKbytes;
 	return std::to_string(gbytes % bytes) + "." + std::to_string(mbytes % bytesInKbytes * 10 / bytesInKbytes);
 }
+
+#endif

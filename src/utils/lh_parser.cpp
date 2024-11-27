@@ -1,3 +1,6 @@
+#ifndef D_LH_PARSER_CPP
+#define D_LH_PARSER_CPP
+
 #include <cctype>
 #include <cstdlib>
 #include <stdexcept>
@@ -43,14 +46,9 @@ parsing_result parse(parse_settings settings) {
 		return {};
 	}
 
-	std::string content = "";
-	for (char i : file.content) {
-		content.push_back(i);
-	}
-
 	parsing_result result { false };
 
-	std::vector<std::string> lines = split_string(content, '\n');
+	std::vector<std::string> lines = split_string(file.content, '\n');
 	for (int index = 0; index < lines.size(); index++) {
 		std::string line = lines[index];
 
@@ -198,3 +196,5 @@ parsing_result parse(parse_settings settings) {
 	result.success = true;
 	return result;
 }
+
+#endif

@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 #include "terminfo.cpp"
 #include "linuxinfo.cpp"
@@ -7,8 +8,6 @@
 #include "networkinfo.cpp"
 #include "gpuinfo.cpp"
 #include "cpuinfo.cpp"
-#include <string>
-
 
 // terminfo.cpp
 std::pair<unsigned int, unsigned int> get_term_size();
@@ -17,11 +16,13 @@ std::pair<unsigned int, unsigned int> get_pixels_per_cell();
 std::string get_term_name();
 std::string get_shell_name();
 std::string get_shell_version();
+std::string get_colors_block(char i, bool spaces);
 
 // linuxinfo.cpp
 std::string get_distro_name();
 std::string get_linux_version();
 std::string get_uptime();
+std::string get_uptime_short();
 
 // memoryinfo.cpp
 std::string get_total_ram();

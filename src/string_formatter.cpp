@@ -2,12 +2,18 @@
 #define D_STRING_FORMATTER_CPP
 
 #include <string>
+#include "build_flags.hpp"
+#include "utils/color.cpp"
+
+#ifdef FEATURE_INFOPLACEHOLDERS
 #include "sysinfo/sysinfo.hpp"
-#include "utils/colorize.cpp"
+#endif
 
 std::string format_value(std::string key) {
 	// Colors
-	if (key == "black") {
+	if ((key.size() == 7 || key.size() == 4) && key[0] == '#') {
+		return dye::fg_from_rgb(hex_to_rgb(key.substr(1)));
+	} else if (key == "black") {
 		return dye::black();
 	} else if (key == "red") {
 		return dye::red();
@@ -43,6 +49,7 @@ std::string format_value(std::string key) {
 		return dye::fg_reset();
 	}
 
+	#ifdef FEATURE_INFOPLACEHOLDERS
 	// Custom placeholders
 	else if (key == "term") {
 		return get_term_name();
@@ -50,12 +57,20 @@ std::string format_value(std::string key) {
 		return get_shell_name();
 	} else if (key == "shell_version") {
 		return get_shell_version();
+	} else if (key == "colors_block_circles") {
+		return get_colors_block("●");
+	} else if (key == "colors_block_diamonds") {
+		return get_colors_block("◆");
+	} else if (key == "colors_block_squares") {
+		return get_colors_block("■");
 	} else if (key == "distro") {
 		return get_distro_name();
 	} else if (key == "linux_version") {
 		return get_linux_version();
 	} else if (key == "uptime") {
 		return get_uptime();
+	} else if (key == "uptime_short") {
+		return get_uptime_short();
 	} else if (key == "free_ram") {
 		return get_free_ram();
 	} else if (key == "total_ram") {
@@ -87,6 +102,7 @@ std::string format_value(std::string key) {
 	} else if (key == "cpu_physical_cores") {
 		return std::to_string(get_cpu_physical_cores());
 	}
+	#endif
 
 	// System variables
 	else {

@@ -1,19 +1,25 @@
 #ifndef D_FILES_CPP
 #define D_FILES_CPP
 
-#include <chrono>
 #include <cstdlib>
+#include <ctime>
 #include <filesystem>
 #include <fstream>
 #include <stdexcept>
+#include <string>
 #include <vector>
-#include "colorize.cpp"
+#include "color.cpp"
 
-struct file_info {
+struct image_info {
 	bool opened;
 	std::vector<char> content;
 	unsigned int img_width = 0;
 	unsigned int img_height = 0;
+};
+
+struct file_info {
+	bool opened;
+	std::string content;
 };
 
 std::string replace_tilde_path(std::string path) {
@@ -31,13 +37,13 @@ std::string replace_tilde_path(std::string path) {
 	return to_return;
 }
 
-file_info read_file(std::string path) {
+image_info read_image(std::string path) {
 	std::string handled_path = replace_tilde_path(path);
 
 	// Opening the file
 	std::ifstream file(handled_path);
 	if (!file.is_open())
-		return file_info{false};
+		return image_info{false};
 
 	// Determining size of the file
 	file.seekg(0, std::ios::end);
@@ -60,15 +66,16 @@ file_info read_file(std::string path) {
 	std::vector<char> vec;
 	try {
 		vec.reserve(std::max<size_t>(10, file_size));
-	} catch(std::length_error _) {
-	}
+	} catch(std::length_error _) {}
 
 	char byte;
 	while (file.get(byte)) {
 		vec.push_back(byte);
 	}
 
-	return file_info {
+	file.close();
+
+	return image_info {
 		true,
 		vec,
 		width,
@@ -76,7 +83,40 @@ file_info read_file(std::string path) {
 	};
 }
 
+file_info read_file(std::string path) {
+	std::string handled_path = replace_tilde_path(path);
+
+	// Opening the file
+	std::ifstream file(handled_path);
+	if (!file.is_open())
+		return file_info{false};
+
+	// Determining size of the file
+	file.seekg(0, std::ios::end);
+    size_t file_size = file.tellg();
+    file.seekg(0, std::ios::beg);
+
+	// Writing data in the new string
+	std::string str;
+	try {
+		str.reserve(std::max<size_t>(10, file_size));
+	} catch(std::length_error _) {}
+
+	char byte;
+	while (file.get(byte)) {
+		str.push_back(byte);
+	}
+
+	file.close();
+
+	return file_info {
+		true,
+		str,
+	};
+}
+
 std::string get_random_file_from_directory(std::string dirpath) {
+	srand(time(NULL));
 	if (!std::filesystem::is_directory(dirpath)) {
 		log_error("image files directory doesn't exist");
 		return "";
@@ -94,8 +134,7 @@ std::string get_random_file_from_directory(std::string dirpath) {
 		return "";
 	}
 
-	unsigned long number = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now().time_since_epoch()).count();	
-	return files[number % files.size()];
+	return files[rand() % files.size()];
 }
 
 #endif

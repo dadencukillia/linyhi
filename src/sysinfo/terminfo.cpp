@@ -1,3 +1,6 @@
+#ifndef D_TERMINFO_CPP
+#define D_TERMINFO_CPP
+
 #include <cstdlib>
 #include <string>
 #include <sys/ioctl.h>
@@ -71,3 +74,19 @@ std::string get_shell_version() {
 
 	return shell_version;
 }
+
+std::string get_colors_block(const char *i, bool spaces = true) {
+	std::string result;
+
+	for (unsigned int fg = 30; fg <= 37; fg++) {
+		result.append("\e[0;" + std::to_string(fg) + ";1m");
+		result.append(i);
+		if (spaces && fg != 37) {
+			result.append("\e[0;0m ");
+		}
+	}
+
+	return result;
+}
+
+#endif

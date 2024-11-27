@@ -2,12 +2,12 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include "utils/colorize.cpp"
+#include "utils/color.cpp"
 #include "utils/files.cpp"
 #include "utils/strings.cpp"
 #include "terms/kitty.cpp"
 #include "string_formatter.cpp"
-#include "sysinfo/sysinfo.hpp"
+#include "sysinfo/terminfo.cpp"
 
 struct config {
 	std::string images_directory = "";
@@ -27,7 +27,7 @@ int show_from_config(config conf) {
 		return 1;
 	}
 
-	file_info file = read_file(file_path);
+	image_info file = read_image(file_path);
 	if (file.content.size() == 0 || file.img_width == 0 || file.img_height == 0) {
 		log_error("couldn't load the image " + file_path);
 		return 1;
@@ -51,8 +51,8 @@ int show_from_config(config conf) {
 	unsigned int img_rows = (file.img_height + pixels_per_cell.second - 1) / pixels_per_cell.second;
 
 	std::string formated_text = string_format(conf.text);
-	std::vector<std::string> split = split_string(formated_text, '\n');
-	for (unsigned int i = 0; i < split.size(); i++) {
+	std::vector<std::string> lines = split_string(formated_text, '\n');
+	for (unsigned int i = 0; i < std::max<unsigned int>(lines.size(), img_rows); i++) {
 		if (conf.crop_text_height && i >= img_rows) {
 			break;
 		}
@@ -67,10 +67,12 @@ int show_from_config(config conf) {
 			std::cout << dye::from(dye::unchanged, conf.border_color) << conf.border << ' ';
 		}
 
-		std::cout << dye::fg_reset() << split[i] << '\n';
+		if (i < lines.size()) {
+			std::cout << dye::fg_reset() << lines[i] << '\n';
+		}
 	}
 
-	for (unsigned int i = 0; i < conf.padding_y + std::max<int>(0, img_rows - split.size()); i++) {
+	for (unsigned int i = 0; i < conf.padding_y + std::max<int>(0, img_rows - lines.size()); i++) {
 		std::cout << '\n';
 	}
 

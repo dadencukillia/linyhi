@@ -84,12 +84,7 @@ int main() {
 			return 1;
 		}
 
-		std::string content = "";
-		for (char i : file.content) {
-			content.push_back(i);
-		}
-
-		conf.text = content;
+		conf.text = file.content;
 	}
 	if (result.strings.find("imagesdirectory") != result.strings.end()) {
 		conf.images_directory = (config_directory / replace_tilde_path(result.strings["imagesdirectory"])).string();

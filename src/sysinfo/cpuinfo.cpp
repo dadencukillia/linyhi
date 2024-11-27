@@ -1,3 +1,6 @@
+#ifndef D_CPUINFO_CPP
+#define D_CPUINFO_CPP
+
 #include "hwinfo/cpu.h"
 #include <string>
 
@@ -25,3 +28,5 @@ unsigned int get_cpu_physical_cores() {
 
 	return 0;
 }
+
+#endif

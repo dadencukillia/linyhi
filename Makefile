@@ -17,4 +17,4 @@ all: configure compile exe
 release: configure_release compile
 
 test: configure compile
-	./build/test
+	ctest -V --test-dir ./build

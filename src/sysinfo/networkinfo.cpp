@@ -1,3 +1,6 @@
+#ifndef D_NETWORKINFO_CPP
+#define D_NETWORKINFO_CPP
+
 #include "hwinfo/network.h"
 #include <string>
 
@@ -17,3 +20,5 @@ std::string get_ip() {
 
 	return last_ip6;
 }
+
+#endif

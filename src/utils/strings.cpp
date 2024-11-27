@@ -1,7 +1,9 @@
 #ifndef D_STRINGS_CPP
 #define D_STRINGS_CPP
 
+#include <cctype>
 #include <cstdlib>
+#include <cwctype>
 #include <string>
 #include <vector>
 
@@ -76,6 +78,25 @@ std::string bytes_to_human(long bytes) {
 		return std::to_string(kbytes) + "." + std::to_string(bytes * 10 / bytesInKbytes) + " KB";
 	} else {
 		return std::to_string(bytes) + " B";
+	}
+}
+
+std::string time_seconds_to_human_short(unsigned long s) {
+	unsigned long minutes = s / 60;
+	unsigned long hours = minutes / 60;
+	unsigned int days = hours / 24;
+	unsigned int seconds = s % 60;
+	minutes = minutes % 60;
+	hours = hours % 24;
+
+	if (days > 0) {
+		return std::to_string(days) + "d " + std::to_string(hours) + "h";
+	} else if (hours > 0) {
+		return std::to_string(hours) + "h " + std::to_string(minutes) + "m";
+	} else if (minutes > 0) {
+		return std::to_string(minutes) + "m";
+	} else {
+		return std::to_string(seconds) + "s";
 	}
 }
 
